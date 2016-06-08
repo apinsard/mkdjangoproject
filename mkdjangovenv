@@ -1,0 +1,19 @@
+#!/bin/sh
+
+env_name=$1
+project_name=${2:-$env_name}
+project_name=${project_name//-/_}
+workpath=${3:-~/Workspace}
+settings_module=${settings_module:-${project_name}.settings.dev}
+python_version=${python_version:-$(eselect python show)}
+python_version=${python_version#python}
+
+
+mkvirtualenv $env_name
+pip install Django
+deactivate
+mkdir -p $workpath/$env_name
+echo $workpath/$env_name > ~/.venvs/$env_name/.workpath
+echo "export PYTHONPATH=\"$workpath/$env_name:\$VIRTUAL_ENV/lib/python${python_version}\"" >> ~/.venvs/$env_name/bin/postactivate
+echo "export DJANGO_SETTINGS_MODULE=\"${settings_module}\"" >> ~/.venvs/$env_name/bin/postactivate
+workon $env_name

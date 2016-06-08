@@ -1,0 +1,23 @@
+#!/bin/sh
+
+env_name=$1
+project_name=${2:-$env_name}
+project_name=${project_name//-/_}
+workpath=${3:-~/Workspace}
+settings_module=${settings_module:-${project_name}.settings.dev}
+settings_path=${settings_module//./\/}.py
+
+mkdjangoenv $@
+dsm=$DJANGO_SETTINGS_MODULE
+DJANGO_SETTINGS_MODULE=""
+django-admin startproject $project_name .
+
+if [[ "$settings_path" != "$project_name/settings.py" ]]; then
+  mkdir -p ${settings_path%/*}
+  touch ${settings_path%/*}/__init__.py
+  mv $project_name/settings.py ${settings_path%/*}/base.py
+  echo '# -*- coding: utf-8 -*-' > $settings_path
+  echo 'from .base import *  # noqa' >> $settings_path
+fi
+
+DJANGO_SETTINGS_MODULE=$dsm
