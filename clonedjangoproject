@@ -1,0 +1,27 @@
+#!/bin/sh
+
+url=$1
+env_name=${url%.git}
+env_name=${env_name##*/}
+env_name=${2:-$env_name}
+project_name=${3:-$env_name}
+project_name=${project_name//-/_}
+workpath=${4:-~/Workspace}
+settings_module=${settings_module:-${project_name}.settings.dev}
+
+export WORKON_HOME=~/.venvs
+source /usr/bin/virtualenvwrapper.sh
+
+mkdir -p $workpath/$env_name
+git clone $url $workpath/$env_name
+
+mkdjangovenv $env_name $project_name $workpath
+workon $env_name
+
+if [ -f "requirements.txt" ]; then
+  pip install -r requirements.txt
+elif [ -d "requirements" ]; then
+  pip install -r requirements/${settings_module##*.}.txt
+else
+  pip install Django
+fi
