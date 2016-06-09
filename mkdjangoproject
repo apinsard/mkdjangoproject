@@ -7,7 +7,12 @@ workpath=${3:-~/Workspace}
 settings_module=${settings_module:-${project_name}.settings.dev}
 settings_path=${settings_module//./\/}.py
 
-mkdjangoenv $@
+export WORKON_HOME=~/.venvs
+source /usr/bin/virtualenvwrapper.sh
+
+mkdjangovenv $@
+workon $env_name
+
 dsm=$DJANGO_SETTINGS_MODULE
 DJANGO_SETTINGS_MODULE=""
 django-admin startproject $project_name .
@@ -19,5 +24,6 @@ if [[ "$settings_path" != "$project_name/settings.py" ]]; then
   echo '# -*- coding: utf-8 -*-' > $settings_path
   echo 'from .base import *  # noqa' >> $settings_path
 fi
+rm manage.py
 
 DJANGO_SETTINGS_MODULE=$dsm
