@@ -16,7 +16,7 @@ pip install Django
 deactivate
 mkdir -p $workpath/$env_name
 wget -O $workpath/$env_name/.gitignore \
-https://gist.githubusercontent.com/apinsard/aabe9d6e16b0ac14e89101e5c1958977/\
+https://gist.githubusercontent.com/apinsard/aabe9d6e16b0ac14e89101e5c1958977\
 /raw/12011cccd57adbcc0250788dc031313d70a04f74/django-project.gitignore
 echo $workpath/$env_name > ~/.venvs/$env_name/.workpath
 echo "export PYTHONPATH=\"$workpath/$env_name:\$VIRTUAL_ENV/lib/python${python_version}\"" >> ~/.venvs/$env_name/bin/postactivate
